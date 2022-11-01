@@ -27,6 +27,7 @@ const Form = () => {
         })
         .then((res) => {
             if (res.status === 403) {
+                alert('user already exist!');
                 throw new Error('user already exist!');
             } else if (res.status !== 201) {
                 throw new Error('could not create user!');
@@ -65,14 +66,21 @@ const Form = () => {
         e.preventDefault();
 
         if (location.state.type === 'create') {
-            if (user.phone.length !== 10) {
+            if (user.username.includes(' ')) {
+                return alert('Username cannot contain spaces!');
+            }
+            if (user.phone.toString().length !== 10) {
                 return alert('Phone must be 10 digits!');
             }
             createUser(user);
             setUser({username: '', email: '', phone: ''});
         }
+
         if (location.state.type === 'update') {
-            if (user.phone.length !== 10) {
+            if (user.username.includes(' ')) {
+                return alert('Username cannot contain spaces!');
+            }
+            if (user.phone.toString().length !== 10) {
                 return alert('Phone must be 10 digits!');
             }
             updateUser(user);

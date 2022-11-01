@@ -1,8 +1,10 @@
 import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-const Table = () => {
+const Table = ({searchData}) => {
     const [users, setUsers] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -47,6 +49,8 @@ const Table = () => {
         getUsers();
     }, [getUsers]);
 
+    
+
     return (
         <table>
             <thead>
@@ -61,7 +65,19 @@ const Table = () => {
             <tbody>
                 {loading && <tr><td style={{padding: '0.6rem 0', border: 'none', textAlign: 'left'}}>loading...</td></tr>}
                 {
-                    !loading && users.map((user, index) => {
+                    !loading && users.filter((user) => {
+                        if (searchData === '') {
+                            return user;
+                        } else if (user.username.toLowerCase().includes(searchData.toLowerCase())) {
+                            return user;
+                        } else if (user.email.toLowerCase().includes(searchData.toLowerCase())) {
+                            return user;
+                        } else if (user.phone.toString().includes(searchData.toString())) {
+                            return user;
+                        } else {
+                            return null;
+                        }
+                    }).map((user, index) => {
                         return (
                             <tr key={user._id}>
                                 <td>{index + 1}</td>
@@ -69,8 +85,8 @@ const Table = () => {
                                 <td>{user.email}</td>
                                 <td>{user.phone}</td>
                                 <td>
-                                    <Link to='/form' className="updateBtn" state={{type: 'update', id: user._id, username: user.username, email: user.email, phone: user.phone}}>Update</Link>
-                                    <button className="deleteBtn" onClick={() => handleDelete(user._id)}>delete</button>
+                                    <Link to='/form' className="updateBtn" state={{type: 'update', id: user._id, username: user.username, email: user.email, phone: user.phone}}><FontAwesomeIcon style={{color: '#333', fontSize: '1.2rem'}} icon={faPenToSquare} /></Link>
+                                    <button className="deleteBtn" onClick={() => handleDelete(user._id)}><FontAwesomeIcon style={{color: '#333', fontSize: '1.2rem'}} icon={faTrash} /></button>
                                 </td>
                             </tr>
                         );
