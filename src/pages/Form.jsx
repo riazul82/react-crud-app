@@ -4,6 +4,10 @@ import { useLocation } from 'react-router-dom';
 
 const Form = () => {
     const [user, setUser] = useState({username: '', email: '', phone: ''});
+    const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [successFlag, setSuccessFlag] = useState(false);
+    const [errorFlag, setErrorFlag] = useState(false);
     const { username, email, phone } = user;
 
     const location = useLocation();
@@ -19,6 +23,22 @@ const Form = () => {
         }
     }, [location.state.type, location.state.username, location.state.email, location.state.phone]);
     
+    const handleSuccessMessages = (msg) => {
+        setSuccessMessage(msg);
+        setSuccessFlag(true);
+        setTimeout(() => {
+            setSuccessFlag(false);
+        }, 5000);
+    }
+
+    const handleErrorMessage = (msg) => {
+        setErrorMessage(msg);
+        setErrorFlag(true);
+        setTimeout(() => {
+            setErrorFlag(false);
+        }, 5000);
+    }
+
     const createUser = (data) => {
         fetch(url, {
             method: 'POST',
@@ -26,16 +46,22 @@ const Form = () => {
             body: JSON.stringify(data)
         })
         .then((res) => {
-            if (res.status === 403) {
-                alert('user already exist!');
-                throw new Error('user already exist!');
-            } else if (res.status !== 201) {
+            if (res.status === 201) {
+                handleSuccessMessages('user created!');
+                setUser({username: '', email: '', phone: ''});
+            } else if (res.status === 403) {
+                return res.json();
+            } else {
                 throw new Error('could not create user!');
-            } 
-            console.log('user created!');
+            }
+        })
+        .then((body) => {
+            if (body !== undefined) {
+                handleErrorMessage(body.message);
+            }
         })
         .catch((err) => {
-            console.log(err.message);
+            handleErrorMessage(err.message);
         });
     }
 
@@ -48,13 +74,22 @@ const Form = () => {
             body: JSON.stringify(data)
         })
         .then((res) => {
-            if(!res.ok){
-                throw new Error('Failed To Update!');
+            if (res.status === 200) {
+                handleSuccessMessages('user updated!');
+                setUser({username: '', email: '', phone: ''});
+            } else if (res.status === 403) {
+                return res.json();
+            } else {
+                throw new Error('could not update user!');
             }
-            console.log('user updated!');
+        })
+        .then((body) => {
+            if (body !== undefined) {
+                handleErrorMessage(body.message);
+            }
         })
         .catch((err) => {
-            console.log(err.message);
+            handleErrorMessage(err.message);
         });
     }
 
@@ -73,7 +108,6 @@ const Form = () => {
                 return alert('Phone must be 10 digits!');
             }
             createUser(user);
-            setUser({username: '', email: '', phone: ''});
         }
 
         if (location.state.type === 'update') {
@@ -84,12 +118,17 @@ const Form = () => {
                 return alert('Phone must be 10 digits!');
             }
             updateUser(user);
-            setUser({username: '', email: '', phone: ''});
         }
     }
 
     return (
         <div className="form-container">
+            {successFlag && <div className="status-box success">
+                <p>{successMessage}</p>
+            </div>}
+            {errorFlag && <div className="status-box error">
+                <p>{errorMessage}</p>
+            </div>}
             <div className="title">
                 <h1>{location.state.type} User</h1>
             </div>
