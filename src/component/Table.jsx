@@ -1,13 +1,12 @@
 import React from 'react';
-import { useState } from 'react';
-import { useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
 const Table = () => {
     const [users, setUsers] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const url = 'https://crud-app-rest-api.herokuapp.com/users';
+    const url = 'https://user-crud-aaap.herokuapp.com/users';
     
     const getUsers = useCallback(() => {
         fetch(url)
@@ -18,7 +17,6 @@ const Table = () => {
             return res.json();
         })
         .then((data) => {
-            console.log(data);
             setUsers(data.users);
         })
         .catch((err) => {
@@ -30,7 +28,7 @@ const Table = () => {
     }, [url]);
 
     const handleDelete = (id) => {
-        fetch(url + `/${id}`, {
+        fetch(`${url}/${id}`, {
             method: 'DELETE'
         })
         .then((res) => {
@@ -38,7 +36,6 @@ const Table = () => {
                 throw new Error('An error caught!');
             }
             getUsers();
-            console.log(res.status);
             console.log('user deleted!');
         })
         .catch((err) => {
@@ -62,7 +59,7 @@ const Table = () => {
                 </tr>
             </thead>
             <tbody>
-                {loading && <p style={{padding: '0.4rem 0'}}>loading...</p>}
+                {loading && <tr><td style={{padding: '0.6rem 0', border: 'none', textAlign: 'left'}}>loading...</td></tr>}
                 {
                     !loading && users.map((user, index) => {
                         return (

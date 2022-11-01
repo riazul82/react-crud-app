@@ -1,6 +1,5 @@
 import React from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const Form = () => {
@@ -8,7 +7,7 @@ const Form = () => {
     const { username, email, phone } = user;
 
     const location = useLocation();
-    const url = 'https://crud-app-rest-api.herokuapp.com/users';
+    const url = 'https://user-crud-aaap.herokuapp.com/users';
 
     useEffect(() => {
         if (location.state.type === 'update') {
@@ -20,19 +19,38 @@ const Form = () => {
         }
     }, [location.state.type, location.state.username, location.state.email, location.state.phone]);
     
-    const createUser = (url, data) => {
+    const createUser = (data) => {
         fetch(url, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         })
         .then((res) => {
-            if (res.status !== 201) {
-                console.log(res)
-                throw new Error('Could not create user!');
-            }
-            console.log(res.status);
+            if (res.status === 403) {
+                throw new Error('user already exist!');
+            } else if (res.status !== 201) {
+                throw new Error('could not create user!');
+            } 
             console.log('user created!');
+        })
+        .catch((err) => {
+            console.log(err.message);
+        });
+    }
+
+    const updateUser = (data) => {
+        fetch(`${url}/${location.state.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then((res) => {
+            if(!res.ok){
+                throw new Error('Failed To Update!');
+            }
+            console.log('user updated!');
         })
         .catch((err) => {
             console.log(err.message);
@@ -50,11 +68,15 @@ const Form = () => {
             if (user.phone.length !== 10) {
                 return alert('Phone must be 10 digits!');
             }
-            createUser(url, user);
+            createUser(user);
             setUser({username: '', email: '', phone: ''});
         }
         if (location.state.type === 'update') {
-
+            if (user.phone.length !== 10) {
+                return alert('Phone must be 10 digits!');
+            }
+            updateUser(user);
+            setUser({username: '', email: '', phone: ''});
         }
     }
 
