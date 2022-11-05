@@ -1,15 +1,18 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Form = () => {
     const [user, setUser] = useState({username: '', email: '', phone: ''});
-    const [errorMessage, setErrorMessage] = useState('');
+    const [loadingMessage, setLoadingMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [loadingFlag, setLoadingFlag] = useState(false);
     const [successFlag, setSuccessFlag] = useState(false);
     const [errorFlag, setErrorFlag] = useState(false);
     const { username, email, phone } = user;
 
+    const navigate = useNavigate();
     const location = useLocation();
     const url = 'https://user-crud-aaap.herokuapp.com/users';
 
@@ -23,6 +26,11 @@ const Form = () => {
         }
     }, [location.state.type, location.state.username, location.state.email, location.state.phone]);
     
+    const handleLoadingMessage = (msg) => {
+        setLoadingMessage(msg);
+        setLoadingFlag(true);
+    }
+
     const handleSuccessMessages = (msg) => {
         setSuccessMessage(msg);
         setSuccessFlag(true);
@@ -49,6 +57,7 @@ const Form = () => {
             if (res.status === 201) {
                 handleSuccessMessages('user created!');
                 setUser({username: '', email: '', phone: ''});
+                setLoadingFlag(false);
             } else if (res.status === 403) {
                 return res.json();
             } else {
@@ -58,10 +67,12 @@ const Form = () => {
         .then((body) => {
             if (body !== undefined) {
                 handleErrorMessage(body.message);
+                setLoadingFlag(false);
             }
         })
         .catch((err) => {
             handleErrorMessage(err.message);
+            setLoadingFlag(false);
         });
     }
 
@@ -77,6 +88,7 @@ const Form = () => {
             if (res.status === 200) {
                 handleSuccessMessages('user updated!');
                 setUser({username: '', email: '', phone: ''});
+                setLoadingFlag(false);
             } else if (res.status === 403) {
                 return res.json();
             } else {
@@ -86,10 +98,12 @@ const Form = () => {
         .then((body) => {
             if (body !== undefined) {
                 handleErrorMessage(body.message);
+                setLoadingFlag(false);
             }
         })
         .catch((err) => {
             handleErrorMessage(err.message);
+            setLoadingFlag(false);
         });
     }
 
@@ -108,6 +122,7 @@ const Form = () => {
                 return alert('Phone must be 10 digits!');
             }
             createUser(user);
+            handleLoadingMessage('creating...');
         }
 
         if (location.state.type === 'update') {
@@ -118,16 +133,20 @@ const Form = () => {
                 return alert('Phone must be 10 digits!');
             }
             updateUser(user);
+            handleLoadingMessage('updating...');
         }
     }
 
     return (
         <div className="form-container">
-            {successFlag && <div className="status-box success">
-                <p>{successMessage}</p>
+            {loadingFlag && <div className="status-box">
+                <p className="loading">{loadingMessage}</p>
             </div>}
-            {errorFlag && <div className="status-box error">
-                <p>{errorMessage}</p>
+            {successFlag && <div className="status-box">
+                <p className="success">{successMessage}</p>
+            </div>}
+            {errorFlag && <div className="status-box">
+                <p className="error">{errorMessage}</p>
             </div>}
             <div className="title">
                 <h1>{location.state.type} User</h1>
@@ -146,6 +165,10 @@ const Form = () => {
                     <button type="submit">Submit</button>
                 </div>
             </form>
+
+            <div className="redirect-btn-box">
+                <button onClick={() => navigate('/')} className="redirect-btn">Back to Home</button>
+            </div>
         </div>
     );
 }

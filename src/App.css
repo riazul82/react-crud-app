@@ -4,6 +4,7 @@
   margin: 0;
   padding: 0;
   font-family: 'Source Code Pro', monospace;
+  box-sizing: border-box;
 }
 
 .container {
@@ -17,32 +18,60 @@
   overflow: hidden;
 }
 
-.topBar {
+.topbarArea {
   margin-bottom: 1rem;
+  width: 100%;
+  height: auto;
+}
+
+.topBar {
   display: flex;
   align-items: center;
-  height: auto;
-  width: 100%;
 }
 
 .btnTopbar {
   margin-right: 1rem;
+  display: flex;
+  height: 2.7rem;
+  width: 10rem;
+  align-items: center;
+  justify-content: center;
 }
 
 .btnTopbar .crete-user-btn {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
   padding: 0.6rem 1.2rem;
   text-decoration: none;
   color: #fff;
   font-size: 1rem;
+  box-sizing: border-box;
   background: seagreen;
+}
+
+.searchBox {
+  display: flex;
+  height: 2.7rem;
+  width: 320px;
+  align-items: center;
+  justify-content: center;
 }
 
 .searchBox input {
   padding: 0.6rem 1.2rem;
   font-size: 1rem;
+  height: 100%;
+  width: 100%;
   border: 1px solid #ccc;
   outline: none;
   box-sizing: border-box;
+}
+
+.tableArea {
+  width: 100%;
 }
 
 table {
@@ -66,6 +95,31 @@ th {
   background: seagreen;
 }
 
+.status-box {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+}
+
+.status-box p {
+  padding: 0.2rem 1rem;
+  color: #fff;
+  font-size: 1.1rem;
+  border-radius: 0.2rem;
+}
+
+.status-box p.loading {
+  background: steelblue;
+}
+
+.status-box p.success {
+  background: olivedrab;
+}
+
+.status-box p.error {
+  background: orangered;
+}
+
 .form-container {
   position: relative;
   display: flex;
@@ -75,35 +129,12 @@ th {
   align-items: center;
 }
 
-.status-box {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  display: flex;
-  height: 2.8rem;
-  width: auto;
-  min-width: 260px;
-  align-items: center;
-  justify-content: center;
-}
-
-.status-box.success {
-  background: olivedrab;
-}
-
-.status-box.error {
-  background: orangered;
-}
-
-.status-box p {
-  padding: 0 1rem;
-  color: #fff;
-  font-size: 1.1rem;
-}
-
 .form-container .title {
   margin-top: 4rem;
-  font-size: 1.2rem;
+}
+
+.form-container .title h1 {
+  font-size: 2.4rem;
   font-weight: bold;
 }
 
@@ -112,23 +143,24 @@ th {
 }
 
 .form-container form {
+  margin-top: 0.6rem;
+  padding: 0.4rem;
   width: 420px;
   height: auto;
-  padding: 0.4rem;
 }
 
-.form-container form div {
+.form-container form .input-field {
   height: 45px;
   width: 100%;
-  margin-top: 1rem;
+  margin-top: 1.2rem;
 }
 
-.form-container form div input {
+.form-container form .input-field input {
+  padding: 0.2rem 1rem;
+  color: #111;
+  font-size: 1.2rem;
   height: 100%;
   width: 100%;
-  padding: 0.2rem 1rem;
-  font-size: 1.2rem;
-  color: #111;
   border: 1px solid #bbb;
   outline: none;
   box-sizing: border-box;
@@ -146,13 +178,34 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+.button-field {
+  margin-top: 1.8rem;
+}
+
 .button-field button {
   padding: 0.6rem 1.4rem;
   color: #fff;
   font-size: 1.2rem;
   border: none;
   outline: none;
+  cursor: pointer;
   background: seagreen;
+}
+
+.redirect-btn-box {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+}
+
+.redirect-btn-box .redirect-btn {
+  padding: 0.4rem 1rem;
+  color: #fff;
+  font-size: 1.2rem;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background: #333;
 }
 
 .updateBtn {
@@ -168,4 +221,105 @@ input[type=number] {
   border: none;
   outline: none;
   background: none;
+}
+
+.delete-status {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 0.2rem 1rem;
+  color: #fff;
+  font-size: 1.1rem;
+  text-align: right;
+  border-radius: 0.2rem;
+}
+
+@media screen and (max-width: 820px) {
+  .tableArea {
+    overflow: hidden;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 800px;
+  }
+
+  .status-box {
+    top: 1rem;
+    right: 1rem;
+    height: 2.2rem;
+  }
+  
+  .status-box p {
+    padding: 0.2rem 0.6rem;
+    font-size: 1rem;
+  }
+
+  .redirect-btn-box {
+    bottom: 1rem;
+    right: 1rem;
+  }
+
+  .delete-status {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.2rem 0.6rem;
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 680px) {
+  .container {
+    padding: 0 1rem;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .topBar {
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+  }
+
+  .btnTopbar {
+    margin-bottom: 1rem;
+  }
+
+  .form-container form {
+    width: 100%;
+    padding: 0.4rem 1rem;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .btnTopbar {
+    height: 2.4rem;
+  }
+
+  .searchBox {
+    height: 2.4rem;
+    width: 100%;
+  }
+
+  .form-container .title h1 {
+    font-size: 2rem;
+  }
+
+  .form-container form .input-field {
+    height: 42px;
+  }
+  
+  .form-container form .input-field input {
+    padding: 0.2rem 1rem;
+    font-size: 1.1rem;
+  }
+
+  .button-field button {
+    font-size: 1.1rem;
+  }
+
+  td, th {
+    padding: 0.6rem 2rem;
+    text-align: center;
+  }
 }

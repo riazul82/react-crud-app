@@ -11,8 +11,12 @@ const Home = () => {
 
     return (
         <div className='container'>
-            <TopBar searchText={getSearchData} />
-            <Table searchData={searchData} />
+            <div className="topbarArea">
+                <TopBar searchText={getSearchData} />
+            </div>
+            <div className="tableArea">
+                <Table searchData={searchData} />
+            </div>
         </div>
     );
 }
