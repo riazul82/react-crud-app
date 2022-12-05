@@ -14,7 +14,7 @@ const Form = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const url = 'https://user-crud-aaap.herokuapp.com/users';
+    const url = 'https://crud-app-rest-api-production.up.railway.app/users';
 
     useEffect(() => {
         if (location.state.type === 'update') {

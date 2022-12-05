@@ -10,7 +10,7 @@ const Table = ({searchData}) => {
     const [deleteStatus, setDeleteStatus] = useState('');
     const [deleteLoading, setDeleteLoading] = useState(false);
 
-    const url = 'https://user-crud-aaap.herokuapp.com/users';
+    const url = 'https://crud-app-rest-api-production.up.railway.app/users';
     
     const getUsers = useCallback(() => {
         fetch(url)
